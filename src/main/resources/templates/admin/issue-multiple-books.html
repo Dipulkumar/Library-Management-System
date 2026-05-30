@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Issue Multiple Books</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+    <h2>Issue Multiple Books</h2>
+    <form th:action="@{/admin/issues/issue-multiple}" method="post">
+        <div class="mb-3">
+            <label for="userId" class="form-label">Select User</label>
+            <select class="form-select" name="userId" id="userId" required>
+                <option value="">-- Select User --</option>
+                <th:block th:each="user : ${users}">
+                    <option th:value="${user.id}" th:text="${user.name}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Select Books</label>
+            <th:block th:each="book : ${books}">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="bookIds" th:value="${book.id}" id="book_${book.id}">
+                    <label class="form-check-label" th:for="'book_' + ${book.id}"
+                        th:text="${book.title} + ' (Qty: ' + ${book.quantity} + ')'"></label>
+                </div>
+            </th:block>
+        </div>
+        <div class="mb-3">
+            <label for="adminId" class="form-label">Admin ID</label>
+            <input type="number" class="form-control" name="adminId" id="adminId" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Issue Books</button>
+    </form>
+</body>
+</html>

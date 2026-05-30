@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <!-- Bootstrap CSS -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+        rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            max-width: 700px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #d35400;
+        }
+        .btn-update {
+            background-color: #d35400;
+            color: white;
+        }
+        .btn-update:hover {
+            background-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Edit User</h2>
+    <form th:action="@{/users/update}" th:object="${user}" method="post">
+        <input type="hidden" th:field="*{Id}" />
+
+        <div class="mb-3">
+            <label class="form-label">Name:</label>
+            <input type="text" th:field="*{name}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date of Birth:</label>
+            <input type="date" th:field="*{DOB}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ID Type:</label>
+            <input type="text" th:field="*{IDtype}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ID Number:</label>
+            <input type="text" th:field="*{IDnumber}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Education:</label>
+            <input type="text" th:field="*{Education}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Permanent Address:</label>
+            <input type="text" th:field="*{permanent_address}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Local Address:</label>
+            <input type="text" th:field="*{local_address}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Contact Number:</label>
+            <input type="text" th:field="*{contactnumber}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email ID:</label>
+            <input type="email" th:field="*{EmailID}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Created At:</label>
+            <input type="datetime-local" th:field="*{createdAt}" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Membership Date:</label>
+            <input type="date" th:field="*{membershipDate}" class="form-control" />
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-update">Update</button>
+            <a href="/users" class="btn btn-secondary ms-2">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+</script>
+</body>
+</html>

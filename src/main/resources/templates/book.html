@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Library Management|Users</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <!-- Bootstrap CSS + Bootstrap Icons -->
+	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+	    <link rel="stylesheet" th:href="@{/assets/common.css}" />
+	</head>
+	<body>
+		<div class="wrapper">
+		    <div th:replace="fragments/sidebar :: sidebar(activePage='books')"></div>
+		
+		    <div class="mainContent">
+		    	<!-- Include the header fragment -->
+    			<div th:replace="fragments/header :: header(name=${name}, email=${email}, pageTitle='Books')"></div>		
+		    	<!-- Main Content -->
+		    	<div class="content">
+		    		<div class="tableSearchContainer">
+		    	 	 <!-- Search input -->
+		    	 	 	<label>Search Book</label>
+					 	<input type="text" id="searchInput" class="searchField form-control" placeholder="Search by name, email etc...">
+		    	 	</div>
+		    	 	
+		    	 	<a sec:authorize="hasAuthority('ALL') or hasAuthority('addBook')"  class="btn btn-success rounded-circle" href="/books/add" title="Add new admin">
+					  <i class="bi bi-plus"></i>
+					 </a>
+							    	 	
+			    	 <div class="tableContainer">
+	    				<div class="tableContent">
+							<table id="userTable" class="table table-striped table-bordered align-middle">
+						        <thead>
+							         <tr>
+					                    <th>BookID</th>
+					                    <th>Title</th>
+					                    <th>Author</th>
+					                    <th>Genre</th>
+					                    <th>Quantity</th>
+					                    <th>Publisher</th>
+					                    <th>Publisher Year</th>
+					                    <th>ISBIN</th>
+					                    <th>Edition</th>
+					                    <th>Price</th>
+					                    <th>Action</th>
+					                </tr>
+						        </thead>
+						        <tbody id="userTableBody">
+							       <tr th:each="book : ${books}">
+					                    <td th:text="${book.id}"></td>
+					                    <td th:text="${book.title}"></td>
+					                    <td th:text="${book.author}"></td>
+					                    <td th:text="${book.genre}"></td>
+					                    <td th:text="${book.quantity}"></td>
+					                    <td th:text="${book.publisher}"></td>
+					                    <td th:text="${book.publisherYear}"></td>
+					                    <td th:text="${book.ISBIN}"></td>
+					                    <td th:text="${book.edition}"></td>
+					                    <td th:text="${book.price}"></td>
+					                    <td>
+					                        <a class="action-link" 
+					                           sec:authorize="hasAuthority('ALL') or hasAuthority('updateBook')" 
+					                           th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>
+					                        <span sec:authorize="hasAuthority('ALL') or (hasAuthority('updateBook') AND hasAuthority('deleteBook'))">|</span>
+					                        <form sec:authorize="hasAuthority('ALL') or hasAuthority('deleteBook')" 
+					                              th:action="@{'/books/delete/' + ${book.id}}" method="post" style="display:inline;">
+					                            <input type="hidden" name="_method" value="delete"/>
+					                            <button class="LinkBtn" type="submit">Delete</button>
+					                        </form>
+					                        <form sec:authorize="hasRole('ROLE_USER')" 
+					                              th:action="@{'/users/issuebook/' + ${book.id}}" method="post" style="display:inline;">
+					                            <button class="LinkBtn IssueBook" type="submit">Issue This Book</button>
+					                        </form>
+					                    </td>
+					                </tr>
+						        </tbody>
+						    </table>
+	    				</div>
+	    			</div>
+	    			
+	    			<div class="tablePaginator">
+	   					<!-- Pagination -->
+					    <nav>
+					        <ul id="pagination" class="pagination"></ul>
+					    </nav>
+	   				</div>
+    			</div>
+		    </div>
+		</div>
+
+		<!-- Bootstrap JS -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		
+		<script>
+		    // Toggle sidebar on mobile
+		    document.getElementById('sidebarToggle').addEventListener('click', function() {
+		        document.getElementById('sidebar').classList.toggle('collapsed');
+		    });
+		    
+		    document.addEventListener('DOMContentLoaded', () => {
+		        const table = document.getElementById('userTable');
+		        const tbody = document.getElementById('userTableBody');
+		        const rows = Array.from(tbody.querySelectorAll('tr'));
+		        const searchInput = document.getElementById('searchInput');
+		        const pagination = document.getElementById('pagination');
+		        const rowsPerPage = 5;
+		        let currentPage = 1;
+		        let filteredRows = rows.slice();
+		        let sortAsc = true;
+
+		        function renderTablePage() {
+		            tbody.innerHTML = '';
+		            let start = (currentPage - 1) * rowsPerPage;
+		            let end = start + rowsPerPage;
+		            filteredRows.slice(start, end).forEach(row => tbody.appendChild(row));
+		            renderPagination();
+		        }
+
+		        function renderPagination() {
+		            pagination.innerHTML = '';
+		            let pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+		            for (let i = 1; i <= pageCount; i++) {
+		                let li = document.createElement('li');
+		                li.className = 'page-item' + (i === currentPage ? ' active' : '');
+		                let a = document.createElement('a');
+		                a.className = 'page-link';
+		                a.textContent = i;
+		                a.addEventListener('click', () => {
+		                    currentPage = i;
+		                    renderTablePage();
+		                });
+		                li.appendChild(a);
+		                pagination.appendChild(li);
+		            }
+		        }
+
+		        function searchTable() {
+		            const query = searchInput.value.toLowerCase();
+		            filteredRows = rows.filter(row =>
+		                row.textContent.toLowerCase().includes(query)
+		            );
+		            currentPage = 1;
+		            renderTablePage();
+		        }
+
+		        function sortTable(colIndex) {
+		            filteredRows.sort((a, b) => {
+		                let aText = a.children[colIndex].textContent.trim().toLowerCase();
+		                let bText = b.children[colIndex].textContent.trim().toLowerCase();
+		                return sortAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+		            });
+		            sortAsc = !sortAsc;
+		            renderTablePage();
+		        }
+
+		        // Init
+		        renderTablePage();
+
+		        // Events
+		        searchInput.addEventListener('keyup', searchTable);
+		        table.querySelectorAll('th.sortable').forEach((th, idx) => {
+		            th.addEventListener('click', () => sortTable(idx));
+		        });
+		    });
+		</script>
+	</body>
+</html>
+ 
+

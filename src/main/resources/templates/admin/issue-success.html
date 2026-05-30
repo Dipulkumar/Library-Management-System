@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Issue Success</title>
+</head>
+<body class="container mt-4">
+    <h2>Books Issued Successfully!</h2>
+    <ul>
+        <li th:each="issue : ${issuedBooks}" th:text="'Book ID: ' + ${issue.book.id} + ', Title: ' + ${issue.book.title}"></li>
+    </ul>
+    <a href="/admin/issues/new-multiple">Issue More Books</a>
+</body>
+</html>

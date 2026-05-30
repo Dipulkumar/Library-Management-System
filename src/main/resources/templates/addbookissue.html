@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Book Issue</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            max-width: 500px;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        select, input[type="date"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        select:focus, input[type="date"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0.2rem;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover { background: #0056b3; transform: translateY(-2px); }
+        .btn:active { transform: translateY(1px); }
+
+        .btn-cancel {
+            background: #6c757d;
+        }
+
+        .btn-cancel:hover { background: #5a6268; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Add New Book Issue</h2>
+    <form th:action="@{/bookissues/save}" method="post">
+
+        <label>User:</label>
+        <select name="userId">
+            <option value="" selected>Select User</option>
+            <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.name}"></option>
+        </select>
+
+        <label>Books:</label>
+        <select name="bookIds" multiple size="5">
+            <option th:each="b : ${books}" th:value="${b.id}" th:text="${b.title + ' (Qty: ' + b.quantity + ')'}"></option>
+        </select>
+
+        <label>Issue Date:</label>
+        <input name="issueDate" type="date" />
+
+        <label>Due Date:</label>
+		<input name="returnDate" type="date" />
+
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/bookissues}" class="btn btn-cancel">Cancel</a>
+    </form>
+</div>
+
+<script>
+    // Highlight active field container for better UX
+    document.querySelectorAll('select, input[type="date"]').forEach(el => {
+        el.addEventListener('focus', () => el.style.backgroundColor = '#e8f0fe');
+        el.addEventListener('blur', () => el.style.backgroundColor = '');
+    });
+</script>
+</body>
+</html>

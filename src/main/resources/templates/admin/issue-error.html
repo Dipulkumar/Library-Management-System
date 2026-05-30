@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error</title>
+</head>
+<body class="container mt-4">
+    <h2>Error Issuing Books</h2>
+    <p th:text="${error}"></p>
+    <a href="/admin/issues/new-multiple">Try Again</a>
+</body>
+</html>

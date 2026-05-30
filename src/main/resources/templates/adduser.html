@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New User</title>
+    <!-- Bootstrap CSS -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+        rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        .form-container {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 700px;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #4A00E0;
+        }
+        .btn-custom {
+            background-color: #4A00E0;
+            color: #fff;
+        }
+        .btn-custom:hover {
+            background-color: #8E2DE2;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add New User</h2>
+        <form th:action="@{/users/add}" th:object="${user}" method="post"  onsubmit="return validateAndEncodePassword()">
+            <div class="mb-3">
+                <label class="form-label">User Name:</label>
+                <input type="text" th:field="*{username}" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password:</label>
+                <input type="text" th:field="*{password}" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Name:</label>
+                <input type="text" th:field="*{name}" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Date of Birth:</label>
+                <input type="date" th:field="*{DOB}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">ID Type:</label>
+                <input type="text" th:field="*{IDtype}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">ID Number:</label>
+                <input type="text" th:field="*{IDnumber}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Education:</label>
+                <input type="text" th:field="*{Education}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Permanent Address:</label>
+                <input type="text" th:field="*{permanent_address}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Local Address:</label>
+                <input type="text" th:field="*{local_address}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contact Number:</label>
+                <input type="text" th:field="*{contactnumber}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email ID:</label>
+                <input type="email" th:field="*{EmailID}" class="form-control" />
+            </div>
+           <!--  <div class="mb-3">
+                <label class="form-label">Created At:</label>
+                <input type="datetime-local" th:field="*{createdAt}" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Membership Date:</label>
+                <input type="date" th:field="*{membershipDate}" class="form-control" />
+            </div> -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom">Save</button>
+                <a href="/users" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <!-- Bootstrap JS (optional) -->
+    <script 
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    </script>
+    
+    
+    
+        <script type="text/javascript">
+			function validateAndEncodePassword() {
+				console.log("validate method call");
+	    		let message = document.getElementById("message");
+	    		let messageString = "";
+	    		
+	    		 // Get form values
+	    		let username = document.getElementById("username").value.trim();
+	    	    let password = document.getElementById("userpassword").value;
+	    	    let name = document.getElementById("name").value.trim();
+	    	    let idtype = document.getElementById("idtype").value.trim();
+	    	    let idnumber = document.getElementById("idnumber").value.trim();
+	    	    let education = document.getElementById("education").value.trim();
+	    	    let contactnumber = document.getElementById("contactnumber").value.trim();
+	    	    let emailid = document.getElementById("emailid").value.trim();
+	    
+	    		// Password validation regex
+	    		let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+	
+			    if (!regex.test(password)) {
+			        messageString += "<p>❌ Password must be at least 8 characters, include uppercase, lowercase, number, and special character.</p>";
+			        console.log("password valid");
+			    }
+			    
+			    // UserName validation: alphanumeric
+			    if (!/^[A-Za-z0-9]+$/.test(username)) {
+			        
+			        messageString += "<p>❌ User Name must be alphanumeric.</p>";
+			        console.log("username valid");
+			    }
+			    
+			    // Name validation: only letters and spaces
+			    if (!/^[A-Za-z\s]+$/.test(name)) {
+			        
+			        messageString += "<p>❌ Name must contain only letters and spaces.</p>";
+			        console.log("name valid");
+			    }
+	
+			    // ID Type validation: only letters and spaces
+			    if (!/^[A-Za-z\s]+$/.test(idtype)) {
+			        
+			        messageString += "<p>❌ ID Type must contain only letters.</p>";
+			        console.log("idtype valid");
+			   }
+	
+			    // ID Number validation: alphanumeric
+			    if (!/^[A-Za-z0-9]+$/.test(idnumber)) {
+			        
+			        messageString += "<p>❌ ID Number must be alphanumeric.</p>";
+			        console.log("idnumber valid");
+			   }
+	
+			    // Education validation: only letters and spaces
+			    if (!/^[A-Za-z\s]+$/.test(education)) {
+			        messageString += "<p>❌ Education must contain only letters.</p>";
+			        console.log("education valid");
+			    }
+	
+			    // Contact number validation: digits only, min 10 digits
+			    if (!/^\d{10,}$/.test(contactnumber)) {
+			        messageString += "<p>❌ Contact Number must contain at least 10 digits.</p>";
+			        console.log("contactnumber valid");
+			    }
+	
+			    // Email validation
+			    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			    if (!emailRegex.test(emailid)) {
+			        messageString += "<p>❌ Enter a valid Email ID.</p>";
+			        console.log("email valid");
+			   }
+			    
+			    console.log("messageString: "+ messageString);
+			    if(messageString != ""){
+			        console.log("error present");
+			    	 message.style.color = "red";
+			    	 message.innerHTML = messageString;
+			    	 return false;
+			    }
+			    console.log("validation sucessfull");
+	
+			
+			    // Encode password and set to hidden field
+			    let encoded = btoa(unescape(encodeURIComponent(password)));
+			    document.getElementById("encodedpassword").value = encoded;
+			    message.innerHTML = ""; // clear any previous message
+			
+			    return true; // allow form submission
+			}
+	</script>
+    
+    
+    
+</body>
+</html>
